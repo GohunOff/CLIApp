@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="mcLibBase/mcCLIApp.csproj" Id="19504681-ed0c-43b5-8a60-ae4d625742c5" />
+  <Project Path="Test/Test.csproj" Id="b9efa140-2527-44b0-9b0d-56d165926e5f" />
+</Solution>

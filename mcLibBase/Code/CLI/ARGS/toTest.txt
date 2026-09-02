@@ -1,0 +1,71 @@
+start.exe
+start.exe --build
+start.exe --build p1
+start.exe --build p1 p2 p3
+
+start.exe --build /verbose
+start.exe --build /output=result.txt
+start.exe --build /output=
+start.exe --build /a /b /c
+
+start.exe --build p1 /output=result.txt p2
+start.exe --build /verbose p1
+start.exe --build p1 /verbose p2
+start.exe --build /a p1 /b p2 /c
+start.exe --build p1 /a p2 /b p3 /c
+
+start.exe --build p1 /a p2 /b p3
+start.exe --build /a /b p1 p2
+start.exe --build p1 p2 /a /b
+start.exe --build /a p1 /b p2 /c p3
+
+Configure("--", "--")
+start.exe --build --unknown
+start.exe --build --unknown p1 p2
+start.exe --build p1 --unknown p2
+start.exe --build --a --b --c
+start.exe --build --unknown /verbose p1
+
+start.exe --build /output=a=b
+start.exe --build /connection=server=db;database=test
+start.exe --build /value===
+start.exe --build /name=a=b=c=d
+
+start.exe build
+start.exe /build
+start.exe ""
+start.exe --
+start.exe -- 
+start.exe -- 
+
+start.exe --build /
+start.exe --build /=
+start.exe --build /=value
+
+start.exe --build ""
+start.exe --build "   "
+
+Configure("-", "/")
+start.exe -build
+start.exe -build p1
+start.exe -build /verbose
+start.exe -build p1 /output=test.txt
+start.exe -build --unknown
+
+Configure("/", ":")
+start.exe /build
+start.exe /build p1
+start.exe /build :verbose
+start.exe /build p1 :output=test.txt
+start.exe /build --unknown
+
+start.exe
+start.exe --build
+start.exe --build p1
+start.exe --build p1 p2 p3
+start.exe --build /verbose
+start.exe --build /output=result.txt
+start.exe --build p1 /output=result.txt p2
+start.exe --build /a p1 /b p2 /c
+start.exe --build --unknown p1 p2
+start.exe --build /output=a=b=c

@@ -1,0 +1,17 @@
+COMMAND-LINE = COMMAND { OPTION }
+
+COMMAND = COMMAND_PREFIX COMMAND_NAME
+
+OPTION = OPTION_PREFIX OPTION_NAME [ VALUE ]
+        | OPTION_PREFIX OPTION_NAME "=" VALUE
+
+VALUE = dowolny następny argument,
+        który nie zaczyna się od OPTION_PREFIX
+
+--build
+--build --verbose
+--build --output file.txt
+--build --output "my file.txt"
+--build --output=file.txt
+--build --output=a=b=c
+--build --output= --verbose

@@ -1,0 +1,166 @@
+                         ┌─────────────────────┐
+                         │      Program        │
+                         │       Main()        │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │      CLIApp         │
+                         │                     │
+                         │ Init()              │
+                         │ TryShowHelp()       │
+                         │ Run()               │
+                         └──────────┬──────────┘
+                                    │
+                     ┌──────────────┴──────────────┐
+                     │                             │
+                     ▼                             ▼
+          ┌─────────────────────┐       ┌─────────────────────┐
+          │ CommandLineParser   │       │ ApplicationInfo     │
+          │                     │       │                     │
+          │ string[]            │       │ Name                │
+          │       ↓             │       │ Version             │
+          │ ParsedCommand       │       │ Framework            │
+          └──────────┬──────────┘       │ RuntimeVersion      │
+                     │                  │ OS                  │
+                     │                  │ Architecture        │
+                     │                  │ StartTime           │
+                     │                  │ Location             │
+                     │                  └─────────────────────┘
+                     ▼
+          ┌─────────────────────┐
+          │  ApplicationCommand │
+          │      Runner         │
+          │                     │
+          │ Execute()           │
+          │ ParseCommands()     │
+          │ ConvertValue()      │
+          │ Validate...()       │
+          │ Invoke()            │
+          └──────────┬──────────┘
+                     │
+                     │ korzysta z
+                     ▼
+          ┌─────────────────────┐
+          │     CliCommand      │
+          │                     │
+          │ Reflection          │
+          │ LoadCliCommands()   │
+          │ GetCommands()       │
+          │ GetParameters()     │
+          │ GetOptions()        │
+          │ CurrentCommand      │
+          └──────────┬──────────┘
+                     │
+                     ▼
+          ┌──────────────────────────┐
+          │ CliCommandDefinition     │
+          │                          │
+          │ Command                  │
+          │ Description              │
+          │ Parameters               │
+          │ Options                  │
+          │ Method                   │
+          │ IsHelp                   │
+          └──────────┬───────────────┘
+                     │
+                     │ tworzona z
+                     ▼
+          ┌──────────────────────────┐
+          │ ApplicationCommand       │
+          │ Attribute                 │
+          └──────────┬───────────────┘
+                     │
+              ┌──────┴───────┐
+              ▼              ▼
+     ┌────────────────┐ ┌──────────────────┐
+     │ Application-   │ │ Application-     │
+     │ Parameter      │ │ Option           │
+     │ Attribute      │ │ Attribute        │
+     └────────────────┘ └──────────────────┘
+
+
+                     ┌───────────────────────┐
+                     │    ApplicationHelp    │
+                     │                       │
+                     │ LoadCliCommands()     │
+                     │ Items                 │
+                     │ Format                │
+                     └───────────┬───────────┘
+                                 │
+                                 ▼
+                       IApplicationInfoOutput
+
+
+ Gdzie faktycznie jest problem?
+
+ ApplicationCommandRunner
+│
+├── znajduje komendę
+├── waliduje definicję
+├── analizuje ParsedCommand
+├── znajduje parametr
+├── znajduje opcję
+├── sprawdza duplikaty
+├── sprawdza grupy opcji
+├── konwertuje string → typ
+├── ustala default
+├── tworzy instance
+└── wykonuje MethodInfo.Invoke()
+
+             ApplicationCommandRunner
+                       │
+       ┌───────────────┼────────────────┐
+       │               │                │
+       ▼               ▼                ▼
+    Discovery       Binding          Execution
+       │               │                │
+       ▼               ▼                ▼
+   znajdź cmd       CLI → object[]   Invoke()
+
+   ApplicationCommandRunner
+        │
+        ├── CommandResolver
+        │
+        ├── CommandDefinitionValidator
+        │
+        ├── CommandArgumentBinder
+        │
+        └── CommandInvoker
+
+                             CLIApp
+                           │
+                           ▼
+                 ApplicationCommandRunner
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+          Resolver      Binder       Invoker
+              │            │            │
+              ▼            ▼            ▼
+       CliCommandDef   object[]      MethodInfo
+
+
+       Dzisiaj masz w Execute():
+
+var command = CliCommand
+    .LoadCliCommands()
+    .FirstOrDefault(x =>
+        x.Command.Equals(
+            args.Name,
+            StringComparison.OrdinalIgnoreCase));
+
+To jest osobna odpowiedzialność.
+
+Można zrobić:
+
+private CliCommandDefinition ResolveCommand(
+    string name)
+{
+    return CliCommand
+        .LoadCliCommands()
+        .FirstOrDefault(x =>
+            x.Command.Equals(
+                name,
+                StringComparison.OrdinalIgnoreCase));
+}
