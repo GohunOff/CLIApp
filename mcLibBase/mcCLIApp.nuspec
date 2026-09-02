@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>mcCLIApp</id>
+    <version>1.0.0</version>
+    <authors>gohunoff@gmail.com</authors>
+    <description>A lightweight and extensible command-line interface (CLI) framework for .NET applications. Define commands, parameters, options, and help messages using simple C# attributes. MC.Code.CLI automatically handles command discovery, argument parsing, default values, command invocation, and help generation, reducing the amount of boilerplate code required to build console applications.</description>
+	<tags>cli command line console</tags>
+  </metadata>
+	<files>
+		<file src="bin\Release\mcCLIApp.dll"
+			  target="lib\net48" />
+		<file src="bin\Release\mcCLIApp.xml"
+			  target="lib\net48" />
+	</files>
+</package>

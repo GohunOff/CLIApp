@@ -12,6 +12,10 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <PackageId>mcCLIApp</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>TwojeImie</Authors>
+    <Description>Biblioteka do tworzenia aplikacji CLI.</Description>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -46,9 +50,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=10.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.10\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="mcCLIApp.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Code\CLI\ARGS\into.txt" />

@@ -5,6 +5,7 @@ using System;
 
 namespace Test
 {
+    //.\nuget.exe pack mcCLIApp.nuspec
     internal class Program
     {
         static void Main(string[] args)
