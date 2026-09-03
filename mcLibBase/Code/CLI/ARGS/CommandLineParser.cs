@@ -1,9 +1,16 @@
-﻿using System;
+﻿using MC.Code.CLI.RES;
+using System.Resources;
+using System;
 
 namespace MC.Code.CLI.ARGS
 {
     public static class CommandLineParser
     {
+        private static readonly LocalizedResource _messages
+            = new LocalizedResource(new ResourceManager
+                ("MC.Code.CLI.ARGS.Resources.CommandLineParser",
+                typeof(CommandLineParser).Assembly));
+
         private static bool _initialized = false;
         private static string _commandPrefix = "--";
         private static string _optionPrefix = "/";
@@ -14,9 +21,9 @@ namespace MC.Code.CLI.ARGS
 
         private static bool ContainsWhiteSpace(string value)
         {
-            for (int i = 0; i < value.Length; i++)
+            foreach (char character in value)
             {
-                if (char.IsWhiteSpace(value[i]))
+                if (char.IsWhiteSpace(character))
                     return true;
             }
 
@@ -26,27 +33,27 @@ namespace MC.Code.CLI.ARGS
         public static void Configure(string commandPrefix,string optionPrefix)
         {
             if (_initialized)
-                throw new InvalidOperationException(
-                    "\r\nCommandLineParser has already been initialized.");
+                throw new InvalidOperationException(_messages.Get(
+                                    "ParserAlreadyInitialized"));
 
             if (string.IsNullOrWhiteSpace(commandPrefix))
-                throw new ArgumentException(
-                    "The command prefix cannot be empty.",
+                throw new ArgumentException(_messages.Get(
+                                    "CommandPrefixEmpty"),
                     nameof(commandPrefix));
 
             if (string.IsNullOrWhiteSpace(optionPrefix))
-                throw new ArgumentException(
-                    "The option prefix cannot be empty.",
+                throw new ArgumentException(_messages.Get(
+                                    "OptionPrefixEmpty"),
                     nameof(optionPrefix));
 
             if (ContainsWhiteSpace(commandPrefix))
-                throw new ArgumentException(
-                    "The command prefix cannot contain whitespace characters.",
+                throw new ArgumentException(_messages.Get(
+                                    "CommandPrefixContainsWhitespace"),
                     nameof(commandPrefix));
-
+         
             if (ContainsWhiteSpace(optionPrefix))
-                throw new ArgumentException(
-                    "The option prefix cannot contain whitespace characters.",
+                throw new ArgumentException(_messages.Get(
+                                    "OptionPrefixContainsWhitespace"),
                     nameof(optionPrefix));
 
 
@@ -93,20 +100,20 @@ namespace MC.Code.CLI.ARGS
             if (!IsCommand(commandArgument))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "The first argument must be a command starting with '{0}'.",
+                         _messages.Get(
+                            "FirstArgumentMustBeCommand",
                         _commandPrefix),
                     nameof(args));
             }
 
             string commandName =
                 commandArgument.Substring(_commandPrefix.Length);
-
+            
             if (string.IsNullOrWhiteSpace(commandName))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "Invalid command: '{0}'.",
+                          _messages.Get(
+                        "InvalidCommand",
                         commandArgument),
                     nameof(args));
             }
@@ -124,11 +131,12 @@ namespace MC.Code.CLI.ARGS
             for (int i = 1; i < args.Length; i++)
             {
                 string arg = args[i];
-
+                
                 if (string.IsNullOrWhiteSpace(arg))
                 {
                     throw new ArgumentException(
-                        "The argument cannot be empty.",
+                        _messages.Get(
+                            "ArgumentCannotBeEmpty"),
                         nameof(args));
                 }
 
@@ -155,12 +163,12 @@ namespace MC.Code.CLI.ARGS
 
                 string optionArgument =
                     arg.Substring(_optionPrefix.Length);
-
+                
                 if (string.IsNullOrWhiteSpace(optionArgument))
                 {
                     throw new ArgumentException(
-                        string.Format(
-                            "Invalid option: '{0}'.",
+                              _messages.Get(
+                                "InvalidOption",
                             arg),
                         nameof(args));
                 }
@@ -187,12 +195,12 @@ namespace MC.Code.CLI.ARGS
                 {
                     optionName = optionArgument;
                 }
-
+                
                 if (string.IsNullOrWhiteSpace(optionName))
                 {
                     throw new ArgumentException(
-                        string.Format(
-                            "Invalid option name: '{0}'.",
+                              _messages.Get(
+                                    "InvalidOptionName",
                             arg),
                         nameof(args));
                 }
