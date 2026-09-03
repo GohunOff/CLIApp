@@ -23,7 +23,7 @@ namespace MC.Code.CLI.FormaterHelp
                 new StringBuilder();
 
             output.AppendLine(
-                "Dostępne polecenia:");
+                "Available commands:");
 
             output.AppendLine();
 

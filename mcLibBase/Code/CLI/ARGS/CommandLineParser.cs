@@ -27,26 +27,26 @@ namespace MC.Code.CLI.ARGS
         {
             if (_initialized)
                 throw new InvalidOperationException(
-                    "CommandLineParser został już zainicjalizowany.");
+                    "\r\nCommandLineParser has already been initialized.");
 
             if (string.IsNullOrWhiteSpace(commandPrefix))
                 throw new ArgumentException(
-                    "Prefiks komendy nie może być pusty.",
+                    "The command prefix cannot be empty.",
                     nameof(commandPrefix));
 
             if (string.IsNullOrWhiteSpace(optionPrefix))
                 throw new ArgumentException(
-                    "Prefiks opcji nie może być pusty.",
+                    "The option prefix cannot be empty.",
                     nameof(optionPrefix));
 
             if (ContainsWhiteSpace(commandPrefix))
                 throw new ArgumentException(
-                    "Prefiks komendy nie może zawierać białych znaków.",
+                    "The command prefix cannot contain whitespace characters.",
                     nameof(commandPrefix));
 
             if (ContainsWhiteSpace(optionPrefix))
                 throw new ArgumentException(
-                    "Prefiks opcji nie może zawierać białych znaków.",
+                    "The option prefix cannot contain whitespace characters.",
                     nameof(optionPrefix));
 
 
@@ -94,7 +94,7 @@ namespace MC.Code.CLI.ARGS
             {
                 throw new ArgumentException(
                     string.Format(
-                        "Pierwszy argument musi być komendą rozpoczynającą się od '{0}'.",
+                        "The first argument must be a command starting with '{0}'.",
                         _commandPrefix),
                     nameof(args));
             }
@@ -106,7 +106,7 @@ namespace MC.Code.CLI.ARGS
             {
                 throw new ArgumentException(
                     string.Format(
-                        "Nieprawidłowa komenda: '{0}'.",
+                        "Invalid command: '{0}'.",
                         commandArgument),
                     nameof(args));
             }
@@ -128,7 +128,7 @@ namespace MC.Code.CLI.ARGS
                 if (string.IsNullOrWhiteSpace(arg))
                 {
                     throw new ArgumentException(
-                        "Argument nie może być pusty.",
+                        "The argument cannot be empty.",
                         nameof(args));
                 }
 
@@ -160,7 +160,7 @@ namespace MC.Code.CLI.ARGS
                 {
                     throw new ArgumentException(
                         string.Format(
-                            "Nieprawidłowa opcja: '{0}'.",
+                            "Invalid option: '{0}'.",
                             arg),
                         nameof(args));
                 }
@@ -192,7 +192,7 @@ namespace MC.Code.CLI.ARGS
                 {
                     throw new ArgumentException(
                         string.Format(
-                            "Nieprawidłowa nazwa opcji: '{0}'.",
+                            "Invalid option name: '{0}'.",
                             arg),
                         nameof(args));
                 }

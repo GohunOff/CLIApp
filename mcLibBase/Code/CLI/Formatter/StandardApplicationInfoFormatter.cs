@@ -35,7 +35,7 @@ namespace MC.Code.CLI.Formatter
 
             AppendLine(
                 output,
-                "Wersja aplikacji",
+                "App version",
                 info.Version);
 
             AppendLine(
@@ -55,18 +55,18 @@ namespace MC.Code.CLI.Formatter
 
             AppendLine(
                 output,
-                "Architektura",
+                "Architecture",
                 info.Architecture);
 
             AppendLine(
                 output,
-                "Uruchomiono",
+                "Launched",
                 info.StartTime.ToString(
                     "yyyy-MM-dd HH:mm:ss"));
 
             AppendLine(
                 output,
-                "Katalog",
+                "Catalog",
                 info.Location);
 
             output.AppendLine(

@@ -28,7 +28,7 @@ namespace MC.Code.CLI.FormaterHelp
                     help.Format.Indent);
 
             output.AppendLine(
-                "Polecenia");
+                "Commands");
 
             output.AppendLine(
                 help.Format.SectionSeparator);

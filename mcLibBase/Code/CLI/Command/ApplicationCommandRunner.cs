@@ -28,7 +28,7 @@ namespace MC.Code.CLI.Command
 
             if (command == null)
             {
-                Console.WriteLine($"Nieznana komenda: {args.Name}");
+                Console.WriteLine($"Unknown command: {args.Name}");
                 return false;
             }
 
@@ -46,7 +46,7 @@ namespace MC.Code.CLI.Command
             catch (Exception exception)
             {
                 Console.WriteLine(
-                    $"Błąd parametrów: {exception.Message}");
+                    $"Parameter error: {exception.Message}");
 
                 return false;
             }
@@ -74,7 +74,7 @@ namespace MC.Code.CLI.Command
                     exception.InnerException ?? exception;
 
                 Console.WriteLine(
-                    $"Błąd wykonania komendy: {cause.Message}");
+                    $"Command execution error: {cause.Message}");
 
                 return false;
             }
@@ -114,13 +114,13 @@ namespace MC.Code.CLI.Command
                     if (property == null)
                     {
                         throw new ArgumentException(
-                            $"Nieznana opcja: {argument}");
+                            $"Unknown option: {argument}");
                     }
 
                     if (values2.ContainsKey(property))
                     {
                         throw new ArgumentException(
-                            $"Opcja '{argument}' została podana więcej niż jeden raz.");
+                            $"The option '{argument}' was specified more than once.");
                     }
 
                     values2[property] = argument;
@@ -135,7 +135,7 @@ namespace MC.Code.CLI.Command
                     if (property == null)
                     {
                         throw new ArgumentException(
-                            $"Nieznana właściwość: {argument}");
+                            $"Unknown property: {argument}");
                     }
                     values[property] = argument;
                 }
@@ -163,8 +163,8 @@ namespace MC.Code.CLI.Command
                     {
                         throw new Exception(
                             $"{ex.Message}{Environment.NewLine}" +
-                            $"oczekiwany parametr %{resultIndex + 1} " +
-                            $"({parameter.Name}) typu {parameter.ParameterType}");
+                            $"expected parameter %{resultIndex + 1} " +
+                            $"({parameter.Name}) type {parameter.ParameterType}");
                     }
                     continue;
                 }
@@ -172,7 +172,7 @@ namespace MC.Code.CLI.Command
                 if (parameter.IsRequired)
                 {
                     throw new ArgumentException(
-                        $"Brak wymaganego parametru: {parameter.Name}");
+                        $"Missing required parameter: {parameter.Name}");
                 }
 
                 result[resultIndex] = parameter.HasDefaultValue
@@ -189,9 +189,9 @@ namespace MC.Code.CLI.Command
                 if (selected.Count > 1)
                 {
                     throw new ArgumentException(
-                        $"Nie można użyć jednocześnie opcji: " +
+                        $"The following options cannot be used simultaneously: " +
                         $"{string.Join(", ", selected.Select(x => x.Name))}. " +
-                        $"Opcje dotyczą tego samego parametru.");
+                        $"The options apply to the same parameter.");
                 }
 
 
@@ -217,10 +217,10 @@ namespace MC.Code.CLI.Command
                     if (!option.ParameterType.IsEnum)
                     {
                         throw new ArgumentException(
-                            $"Opcja {option.Name} ma nieprawidłowy typ " +
+                            $"Option {{option.Name}} has an invalid type. " +
                             $"{option.ParameterType}. " +
-                            $"Dla wielu definicji ApplicationOptionAttribute " +
-                            $"wymagany jest enum.");
+                            $"For multiple definitions of ApplicationOptionAttribute " +
+                            $"An enum is required.");
                     }
 
                     var value = values2[option];
@@ -234,9 +234,9 @@ namespace MC.Code.CLI.Command
                     if (option.ParameterType != typeof(bool))
                     {
                         throw new ArgumentException(
-                            $"Opcja {option.Name} ma nieprawidłowy typ " +
+                            $"Option {option.Name} has an invalid type. " +
                             $"{option.ParameterType}. " +
-                            $"Dopuszczalny typ: System.Boolean.");
+                            $"Allowed type: System.Boolean.");
                     }
 
                     result[resultIndex] = true;
@@ -311,7 +311,7 @@ namespace MC.Code.CLI.Command
                 {
                     throw new FormatException(
                         string.Format(
-                            "Wartość '{0}' nie jest prawidłową wartością typu {1}.",
+                            "The value '{0}' is not a valid value of type {1}.",
                             value,
                             type.Name));
                 }
@@ -327,7 +327,7 @@ namespace MC.Code.CLI.Command
 
                 throw new FormatException(
                     string.Format(
-                        "Wartość '{0}' nie jest prawidłowym identyfikatorem GUID.",
+                        "The value '{0}' is not a valid GUID..",
                         value));
             }
 
@@ -339,7 +339,7 @@ namespace MC.Code.CLI.Command
 
                 throw new FormatException(
                     string.Format(
-                        "Wartość '{0}' nie jest pojedynczym znakiem.",
+                        "The value '{0}' is not a single character.",
                         value));
             }
 
@@ -353,7 +353,7 @@ namespace MC.Code.CLI.Command
 
                 throw new FormatException(
                     string.Format(
-                        "Wartość '{0}' nie jest prawidłową wartością logiczną.",
+                        "The value '{0}' is not a valid boolean value.",
                         value));
             }
 
@@ -376,7 +376,7 @@ namespace MC.Code.CLI.Command
                 {
                     throw new FormatException(
                         string.Format(
-                            "Wartość '{0}' nie może zostać przekonwertowana na typ {1}.",
+                            "The value '{0}' cannot be converted to type {1}.",
                             value,
                             type.Name),
                         ex);
@@ -399,7 +399,7 @@ namespace MC.Code.CLI.Command
                 {
                     throw new FormatException(
                         string.Format(
-                            "Wartość '{0}' nie może zostać przekonwertowana na typ {1}.",
+                            "The value '{0}' cannot be converted to type {1}.",
                             value,
                             type.Name),
                         ex);
@@ -408,7 +408,7 @@ namespace MC.Code.CLI.Command
 
             throw new NotSupportedException(
                 string.Format(
-                    "Konwersja wartości CLI do typu {0} nie jest obsługiwana.",
+                    "Conversion of the CLI value to type {0} is not supported.",
                     type.FullName));
         }
 
@@ -443,17 +443,17 @@ namespace MC.Code.CLI.Command
                 if (methodParameter.ParameterType != parameter.ParameterType)
                 {
                     throw new InvalidOperationException(
-                        $"Parametr '{methodParameter.Name}' ({parameter.Index}) " +
-                        $"ma typ {methodParameter.ParameterType}, " +
-                        $"ale ApplicationParameter deklaruje typ " +
+                        $"Parameter '{methodParameter.Name}' ({parameter.Index}) " +
+                        $"He's got a type. {methodParameter.ParameterType}, " +
+                        $"but ApplicationParameter declares the type " +
                         $"{parameter.ParameterType}.");
                 }
 
                 if (properties.Count(x => x.Index == parameter.Index) > 1)
                 {
                     throw new InvalidOperationException(
-                        $"Parametr '{parameter.Name}' został " +
-                        $"zdefiniowany jako ApplicationParameter więcej niż jeden raz.");
+                        $"Parameter '{parameter.Name}' remained " +
+                        $"defined as ApplicationParameter more than once.");
                 }
             }
 
@@ -474,9 +474,9 @@ namespace MC.Code.CLI.Command
                 if (methodParameter.ParameterType != option.ParameterType)
                 {
                     throw new InvalidOperationException(
-                        $"Parametr '{methodParameter.Name}' ({option.Index}) " +
-                        $"ma typ {methodParameter.ParameterType}, " +
-                        $"ale ApplicationOption '{option.Name}' deklaruje typ " +
+                        $"Parameter '{methodParameter.Name}' ({option.Index}) " +
+                        $"He's got a type. {methodParameter.ParameterType}, " +
+                        $"but ApplicationOption'{option.Name}' declares the type" +
                         $"{option.ParameterType}.");
                 }
 
@@ -485,9 +485,9 @@ namespace MC.Code.CLI.Command
                 if (properties.Any(x => x.Index == option.Index))
                 {   
                     throw new InvalidOperationException(
-                        $"Parametr '{methodParameter.Name}' ({option.Index}) " +
-                        $"został jednocześnie zdefiniowany jako " +
-                        $"ApplicationParameter i ApplicationOption.");
+                        $"Parameter '{methodParameter.Name}' ({option.Index}) " +
+                        $"was simultaneously defined as " +
+                        $"ApplicationParameter and ApplicationOption.");
                 }
             }
 
@@ -506,9 +506,9 @@ namespace MC.Code.CLI.Command
                     if (option.ParameterType != parameterType)
                     {
                         throw new InvalidOperationException(
-                            $"Opcje należące do parametru " +
-                            $"{option.Index} mają różne typy: " +
-                            $"{parameterType} oraz {option.ParameterType}.");
+                            $"Options belonging to the parameter " +
+                            $"{option.Index} \they have different types:" +
+                            $"{parameterType} and {option.ParameterType}.");
                     }
                 }
             }
@@ -526,15 +526,15 @@ namespace MC.Code.CLI.Command
                 if (!names.Add(option.Name))
                 {
                     throw new InvalidOperationException(
-                        $"Opcja '{option.Name}' została zdefiniowana więcej niż jeden raz.");
+                        $"Option '{option.Name}' has been defined more than once.");
                 }
 
                 if (!string.IsNullOrWhiteSpace(option.ShortName) &&
                     !names.Add(option.ShortName))
                 {
                     throw new InvalidOperationException(
-                        $"Nazwa/alias opcji '{option.ShortName}' " +
-                        $"został zdefiniowany więcej niż jeden raz.");
+                        $"Option name/alias '{option.ShortName}' " +
+                        $"has been defined more than once.");
                 }
             }
 
@@ -556,15 +556,15 @@ namespace MC.Code.CLI.Command
                 if (!isParameter && !isOption)
                 {
                     throw new InvalidOperationException(
-                        $"Parametr '{parameter.Name}' ({index}) " +
-                        $"nie ma zdefiniowanej roli.");
+                        $"Parameter '{parameter.Name}' ({index}) " +
+                        $"There is no defined role.");
                 }
 
                 if (isParameter && isOption)
                 {
                     throw new InvalidOperationException(
-                        $"Parametr '{parameter.Name}' ({index}) " +
-                        $"ma więcej niż jedną rolę.");
+                        $"Parameter '{parameter.Name}' ({index}) " +
+                        $"has more than one role.");
                 }
             }
         }
@@ -578,7 +578,7 @@ namespace MC.Code.CLI.Command
             if (index <= 0 || index > parameterCount)
             {
                 throw new InvalidOperationException(
-                    $"Element '{name}' ma nieprawidłowy indeks {index}.");
+                    $"Element '{name}' has an invalid index {index}.");
             }
         }
 

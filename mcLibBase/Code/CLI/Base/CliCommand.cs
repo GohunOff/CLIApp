@@ -18,8 +18,8 @@ namespace MC.Code.CLI.Base
             {
                 throw new InvalidOperationException(
                     $"'{method.DeclaringType?.FullName}.{method.Name}' " +
-                    $"jest oznaczona jako ApplicationCommand, ale jej klasa " +
-                    $"nie dziedziczy po CliCommand.");
+                    $"is marked as ApplicationCommand, but its class " +
+                    $"does not inherit from CliCommand.");
             }
         }
 
@@ -84,8 +84,8 @@ namespace MC.Code.CLI.Base
             if (attribute == null)
             {
                 throw new InvalidOperationException(
-                    $"Metoda '{method.DeclaringType?.FullName}.{method.Name}' " +
-                    $"nie posiada ApplicationCommandAttribute.");
+                    $"Method '{method.DeclaringType?.FullName}.{method.Name}' " +
+                    $"does not have the ApplicationCommandAttribute.");
             }
 
             var parameters = GetParameters(method);
