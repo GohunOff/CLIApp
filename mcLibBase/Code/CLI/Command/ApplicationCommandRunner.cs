@@ -1,16 +1,23 @@
 ﻿using MC.Code.CLI.ARGS;
 using MC.Code.CLI.Base;
+using MC.Code.CLI.Formatter;
+using MC.Code.CLI.RES;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 
 namespace MC.Code.CLI.Command
 {
     public sealed class ApplicationCommandRunner
     {
+        private static readonly LocalizedResource _messages
+                    = new LocalizedResource(new ResourceManager
+              ("MC.Code.CLI.Command.Resources.ApplicationCommandRunner",
+              typeof(ApplicationCommandRunner).Assembly));
         public bool Execute(ParsedCommand args)
         {
             if (args == null)

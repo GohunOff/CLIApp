@@ -75,6 +75,11 @@
     <Compile Include="Code\CLI\Command\ApplicationCommandRunner.cs" />
     <Compile Include="Code\CLI\Command\ApplicationOptionAttribute.cs" />
     <Compile Include="Code\CLI\Command\ApplicationParameterAttribute.cs" />
+    <Compile Include="Code\CLI\Command\Resources\ApplicationCommandRunner.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApplicationCommandRunner.resx</DependentUpon>
+    </Compile>
     <Compile Include="Code\CLI\FormaterHelp\ApplicationHelpCompactFormatter.cs" />
     <Compile Include="Code\CLI\FormaterHelp\ApplicationHelpDetailedFormatter.cs" />
     <Compile Include="Code\CLI\FormaterHelp\Base\ApplicationHelpFormatterBase.cs" />
@@ -124,6 +129,11 @@
     <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CommandLineParser.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\CLI\Command\Resources\ApplicationCommandRunner.pl-PL.resx" />
+    <EmbeddedResource Include="Code\CLI\Command\Resources\ApplicationCommandRunner.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationCommandRunner.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\CLI\FormaterHelp\Resources\ApplicationHelpFormatter.pl-PL.resx" />
     <EmbeddedResource Include="Code\CLI\FormaterHelp\Resources\ApplicationHelpFormatter.resx">
