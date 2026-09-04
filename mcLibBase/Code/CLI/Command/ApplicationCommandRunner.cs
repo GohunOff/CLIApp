@@ -35,7 +35,7 @@ namespace MC.Code.CLI.Command
 
             if (command == null)
             {
-                Console.WriteLine($"Unknown command: {args.Name}");
+                Console.WriteLine(_messages.Get("UnknownCommand", args.Name));
                 return false;
             }
 
@@ -52,8 +52,8 @@ namespace MC.Code.CLI.Command
             }
             catch (Exception exception)
             {
-                Console.WriteLine(
-                    $"Parameter error: {exception.Message}");
+              
+                Console.WriteLine(_messages.Get("ParameterError", exception.Message));
 
                 return false;
             }
@@ -80,8 +80,7 @@ namespace MC.Code.CLI.Command
                 Exception cause =
                     exception.InnerException ?? exception;
 
-                Console.WriteLine(
-                    $"Command execution error: {cause.Message}");
+                Console.WriteLine(_messages.Get("CommandExecutionError", cause.Message));
 
                 return false;
             }
@@ -119,15 +118,13 @@ namespace MC.Code.CLI.Command
                            FindOption(
                                options, args[i].Name);
                     if (property == null)
-                    {
-                        throw new ArgumentException(
-                            $"Unknown option: {argument}");
+                    {                   
+                        throw new ArgumentException(_messages.Get("UnknownOption", argument));
                     }
 
                     if (values2.ContainsKey(property))
                     {
-                        throw new ArgumentException(
-                            $"The option '{argument}' was specified more than once.");
+                        throw new ArgumentException(_messages.Get("OptionSpecifiedMoreThanOnce", argument));
                     }
 
                     values2[property] = argument;
@@ -140,9 +137,8 @@ namespace MC.Code.CLI.Command
                                properties, args[i].ArgumentIndex);
 
                     if (property == null)
-                    {
-                        throw new ArgumentException(
-                            $"Unknown property: {argument}");
+                    {    
+                        throw new ArgumentException(_messages.Get("UnknownProperty", argument));
                     }
                     values[property] = argument;
                 }
@@ -168,18 +164,14 @@ namespace MC.Code.CLI.Command
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(
-                            $"{ex.Message}{Environment.NewLine}" +
-                            $"expected parameter %{resultIndex + 1} " +
-                            $"({parameter.Name}) type {parameter.ParameterType}");
+                        throw new Exception(_messages.Get("ConversionError", (resultIndex + 1), parameter.Name, parameter.ParameterType));
                     }
                     continue;
                 }
 
                 if (parameter.IsRequired)
                 {
-                    throw new ArgumentException(
-                        $"Missing required parameter: {parameter.Name}");
+                    throw new ArgumentException(_messages.Get("MissingRequiredParameter", parameter.Name));
                 }
 
                 result[resultIndex] = parameter.HasDefaultValue
@@ -196,9 +188,8 @@ namespace MC.Code.CLI.Command
                 if (selected.Count > 1)
                 {
                     throw new ArgumentException(
-                        $"The following options cannot be used simultaneously: " +
-                        $"{string.Join(", ", selected.Select(x => x.Name))}. " +
-                        $"The options apply to the same parameter.");
+                        _messages.Get("OptionsCannotBeUsedSimultaneously", string.Join(", ", selected.Select(x => x.Name)))
+                        );
                 }
 
 
@@ -224,10 +215,7 @@ namespace MC.Code.CLI.Command
                     if (!option.ParameterType.IsEnum)
                     {
                         throw new ArgumentException(
-                            $"Option {{option.Name}} has an invalid type. " +
-                            $"{option.ParameterType}. " +
-                            $"For multiple definitions of ApplicationOptionAttribute " +
-                            $"An enum is required.");
+                              _messages.Get("OptionInvalidType", option.Name, option.ParameterType));
                     }
 
                     var value = values2[option];
@@ -241,9 +229,7 @@ namespace MC.Code.CLI.Command
                     if (option.ParameterType != typeof(bool))
                     {
                         throw new ArgumentException(
-                            $"Option {option.Name} has an invalid type. " +
-                            $"{option.ParameterType}. " +
-                            $"Allowed type: System.Boolean.");
+                           _messages.Get("OptionBooleanRequired", option.Name, option.ParameterType));
                     }
 
                     result[resultIndex] = true;
@@ -316,11 +302,9 @@ namespace MC.Code.CLI.Command
                 }
                 catch (ArgumentException)
                 {
+          
                     throw new FormatException(
-                        string.Format(
-                            "The value '{0}' is not a valid value of type {1}.",
-                            value,
-                            type.Name));
+                        _messages.Get("ValueNotValidEnum", value, type.Name));
                 }
             }
 
@@ -333,9 +317,7 @@ namespace MC.Code.CLI.Command
                     return guid;
 
                 throw new FormatException(
-                    string.Format(
-                        "The value '{0}' is not a valid GUID..",
-                        value));
+                        _messages.Get("ValueNotValidGuid", value));
             }
 
             // char
@@ -343,11 +325,9 @@ namespace MC.Code.CLI.Command
             {
                 if (value.Length == 1)
                     return value[0];
-
+         
                 throw new FormatException(
-                    string.Format(
-                        "The value '{0}' is not a single character.",
-                        value));
+                      _messages.Get("ValueNotSingleCharacter", value));
             }
 
             // bool
@@ -357,11 +337,9 @@ namespace MC.Code.CLI.Command
 
                 if (bool.TryParse(value, out boolean))
                     return boolean;
-
+ 
                 throw new FormatException(
-                    string.Format(
-                        "The value '{0}' is not a valid boolean value.",
-                        value));
+                   _messages.Get("ValueNotValidBoolean", value));
             }
 
             // Wszystkie typy IConvertible:
@@ -382,10 +360,7 @@ namespace MC.Code.CLI.Command
                           ex is OverflowException)
                 {
                     throw new FormatException(
-                        string.Format(
-                            "The value '{0}' cannot be converted to type {1}.",
-                            value,
-                            type.Name),
+                         _messages.Get("ValueCannotConvert", value, type.Name),
                         ex);
                 }
             }
@@ -405,18 +380,13 @@ namespace MC.Code.CLI.Command
                           ex is InvalidCastException)
                 {
                     throw new FormatException(
-                        string.Format(
-                            "The value '{0}' cannot be converted to type {1}.",
-                            value,
-                            type.Name),
+                            _messages.Get("ValueCannotConvert", value, type.Name),
                         ex);
                 }
             }
-
+       
             throw new NotSupportedException(
-                string.Format(
-                    "Conversion of the CLI value to type {0} is not supported.",
-                    type.FullName));
+                _messages.Get("ConversionNotSupported", type.FullName));
         }
 
         private void ValidateCommandDefinition(
@@ -449,18 +419,16 @@ namespace MC.Code.CLI.Command
 
                 if (methodParameter.ParameterType != parameter.ParameterType)
                 {
+                   
                     throw new InvalidOperationException(
-                        $"Parameter '{methodParameter.Name}' ({parameter.Index}) " +
-                        $"He's got a type. {methodParameter.ParameterType}, " +
-                        $"but ApplicationParameter declares the type " +
-                        $"{parameter.ParameterType}.");
+                         _messages.Get("ParameterTypeMismatch", methodParameter.Name, parameter.Index, methodParameter.ParameterType));
                 }
 
                 if (properties.Count(x => x.Index == parameter.Index) > 1)
                 {
+
                     throw new InvalidOperationException(
-                        $"Parameter '{parameter.Name}' remained " +
-                        $"defined as ApplicationParameter more than once.");
+                        _messages.Get("ParameterDefinedMoreThanOnce", parameter.Name));
                 }
             }
 
@@ -481,20 +449,16 @@ namespace MC.Code.CLI.Command
                 if (methodParameter.ParameterType != option.ParameterType)
                 {
                     throw new InvalidOperationException(
-                        $"Parameter '{methodParameter.Name}' ({option.Index}) " +
-                        $"He's got a type. {methodParameter.ParameterType}, " +
-                        $"but ApplicationOption'{option.Name}' declares the type" +
-                        $"{option.ParameterType}.");
+                        _messages.Get("OptionBooleanRequired", methodParameter.Name, option.Index, methodParameter.ParameterType, option.Name, option.ParameterType));
                 }
 
-
+                
+                     
                 // Option nie może współistnieć z Parameter
                 if (properties.Any(x => x.Index == option.Index))
                 {   
                     throw new InvalidOperationException(
-                        $"Parameter '{methodParameter.Name}' ({option.Index}) " +
-                        $"was simultaneously defined as " +
-                        $"ApplicationParameter and ApplicationOption.");
+                    _messages.Get("ParameterAndOptionConflict", methodParameter.Name, option.Index));
                 }
             }
 
@@ -510,12 +474,11 @@ namespace MC.Code.CLI.Command
 
                 foreach (var option in group)
                 {
+                   
                     if (option.ParameterType != parameterType)
                     {
                         throw new InvalidOperationException(
-                            $"Options belonging to the parameter " +
-                            $"{option.Index} \they have different types:" +
-                            $"{parameterType} and {option.ParameterType}.");
+                             _messages.Get("OptionsDifferentTypes", option.Index, parameterType, option.ParameterType));
                     }
                 }
             }
@@ -532,16 +495,17 @@ namespace MC.Code.CLI.Command
             {
                 if (!names.Add(option.Name))
                 {
+
                     throw new InvalidOperationException(
-                        $"Option '{option.Name}' has been defined more than once.");
+                       _messages.Get("OptionDefinedMoreThanOnce", option.Name));
                 }
 
                 if (!string.IsNullOrWhiteSpace(option.ShortName) &&
                     !names.Add(option.ShortName))
                 {
+
                     throw new InvalidOperationException(
-                        $"Option name/alias '{option.ShortName}' " +
-                        $"has been defined more than once.");
+                      _messages.Get("OptionAliasDefinedMoreThanOnce", option.ShortName));
                 }
             }
 
@@ -562,16 +526,15 @@ namespace MC.Code.CLI.Command
 
                 if (!isParameter && !isOption)
                 {
+                    
                     throw new InvalidOperationException(
-                        $"Parameter '{parameter.Name}' ({index}) " +
-                        $"There is no defined role.");
+                        _messages.Get("ParameterNoRole", parameter.Name, index));
                 }
 
                 if (isParameter && isOption)
                 {
                     throw new InvalidOperationException(
-                        $"Parameter '{parameter.Name}' ({index}) " +
-                        $"has more than one role.");
+                        _messages.Get("ParameterNoRole", parameter.Name, index));
                 }
             }
         }
@@ -581,11 +544,11 @@ namespace MC.Code.CLI.Command
             string name,
             int parameterCount)
         {
-
+    
             if (index <= 0 || index > parameterCount)
             {
                 throw new InvalidOperationException(
-                    $"Element '{name}' has an invalid index {index}.");
+                   _messages.Get("InvalidParameterIndex", name, index));
             }
         }
 
