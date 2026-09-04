@@ -124,6 +124,15 @@ namespace MC.Code.CLI.ARGS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option name cannot be empty..
+        /// </summary>
+        internal static string OptionNameCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("OptionNameCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The option prefix cannot contain whitespace characters..
         /// </summary>
         internal static string OptionPrefixContainsWhitespace {

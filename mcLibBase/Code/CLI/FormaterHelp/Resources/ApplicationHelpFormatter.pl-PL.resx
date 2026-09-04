@@ -117,48 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ArgumentCannotBeEmpty" xml:space="preserve">
-    <value>The argument cannot be empty.</value>
-    <comment>The argument cannot be empty.</comment>
+  <data name="Commands" xml:space="preserve">
+    <value>Polecenia</value>
   </data>
-  <data name="CommandPrefixContainsWhitespace" xml:space="preserve">
-    <value>The command prefix cannot contain whitespace characters.</value>
-    <comment>The command prefix cannot contain whitespace characters.</comment>
+  <data name="AvailableCommands" xml:space="preserve">
+    <value>Dostępne polecenia:</value>
   </data>
-  <data name="CommandPrefixEmpty" xml:space="preserve">
-    <value>The command prefix cannot be empty.</value>
-    <comment>The command prefix cannot be empty.</comment>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
   </data>
-  <data name="FirstArgumentMustBeCommand" xml:space="preserve">
-    <value>The first argument must be a command starting with '{0}'.</value>
-    <comment>The first argument must be a command starting with '{0}'.</comment>
-  </data>
-  <data name="InvalidCommand" xml:space="preserve">
-    <value>Invalid command: '{0}'.</value>
-    <comment>Invalid command: '{0}'.</comment>
-  </data>
-  <data name="InvalidOption" xml:space="preserve">
-    <value>Invalid option: '{0}'.</value>
-    <comment>Invalid option: '{0}'.</comment>
-  </data>
-  <data name="InvalidOptionName" xml:space="preserve">
-    <value>Invalid option name: '{0}'.</value>
-    <comment>Invalid option name: '{0}'.</comment>
-  </data>
-  <data name="OptionNameCannotBeEmpty" xml:space="preserve">
-    <value>Option name cannot be empty.</value>
-    <comment>Option name cannot be empty.</comment>
-  </data>
-  <data name="OptionPrefixContainsWhitespace" xml:space="preserve">
-    <value>The option prefix cannot contain whitespace characters.</value>
-    <comment>The option prefix cannot contain whitespace characters.</comment>
-  </data>
-  <data name="OptionPrefixEmpty" xml:space="preserve">
-    <value>The option prefix cannot be empty.</value>
-    <comment>The option prefix cannot be empty.</comment>
-  </data>
-  <data name="ParserAlreadyInitialized" xml:space="preserve">
-    <value>CommandLineParser has already been initialized.</value>
-    <comment>CommandLineParser has already been initialized.</comment>
+  <data name="Properties" xml:space="preserve">
+    <value>Właściwości</value>
   </data>
 </root>

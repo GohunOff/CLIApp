@@ -80,6 +80,11 @@
     <Compile Include="Code\CLI\FormaterHelp\Base\ApplicationHelpFormatterBase.cs" />
     <Compile Include="Code\CLI\FormaterHelp\ApplicationHelpStandardFormatter.cs" />
     <Compile Include="Code\CLI\FormaterHelp\Base\IApplicationHelpFormatter.cs" />
+    <Compile Include="Code\CLI\FormaterHelp\Resources\ApplicationHelpFormatter.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApplicationHelpFormatter.resx</DependentUpon>
+    </Compile>
     <Compile Include="Code\CLI\Formatter\Base\ApplicationInfoFormatterBase.cs" />
     <Compile Include="Code\CLI\Formatter\CompactApplicationInfoFormatter.cs" />
     <Compile Include="Code\CLI\Formatter\DetailedApplicationInfoFormatter.cs" />
@@ -110,15 +115,20 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Code\CLI\Application\Resources\ApplicationInfo.pl.resx" />
+    <EmbeddedResource Include="Code\CLI\Application\Resources\ApplicationInfo.pl-PL.resx" />
     <EmbeddedResource Include="Code\CLI\Application\Resources\ApplicationInfo.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ApplicationInfo.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.pl.resx" />
+    <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.pl-PL.resx" />
     <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CommandLineParser.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\CLI\FormaterHelp\Resources\ApplicationHelpFormatter.pl-PL.resx" />
+    <EmbeddedResource Include="Code\CLI\FormaterHelp\Resources\ApplicationHelpFormatter.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationHelpFormatter.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

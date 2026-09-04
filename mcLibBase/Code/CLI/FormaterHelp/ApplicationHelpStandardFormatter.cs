@@ -1,6 +1,8 @@
 ﻿using MC.Code.CLI.FormaterHelp.Base;
 using MC.Code.CLI.Help;
+using MC.Code.CLI.RES;
 using System.Linq;
+using System.Resources;
 using System.Text;
 
 namespace MC.Code.CLI.FormaterHelp
@@ -8,6 +10,11 @@ namespace MC.Code.CLI.FormaterHelp
     public sealed class ApplicationHelpStandardFormatter
         : ApplicationHelpFormatterBase
     {
+        private static readonly LocalizedResource _messages
+                = new LocalizedResource(new ResourceManager
+        ("MC.Code.CLI.FormaterHelp.Resources.ApplicationHelpFormatter",
+        typeof(ApplicationHelpStandardFormatter).Assembly));
+
         public ApplicationHelpStandardFormatter(
            ApplicationHelp format = null)
            : base(format)
@@ -27,8 +34,7 @@ namespace MC.Code.CLI.FormaterHelp
                     ' ',
                     help.Format.Indent);
 
-            output.AppendLine(
-                "Commands");
+            output.AppendLine(_messages.Get("AvailableCommands"));
 
             output.AppendLine(
                 help.Format.SectionSeparator);

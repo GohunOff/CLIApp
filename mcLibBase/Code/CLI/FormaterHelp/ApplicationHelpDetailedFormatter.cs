@@ -1,12 +1,18 @@
-﻿using System.Text;
+﻿using MC.Code.CLI.FormaterHelp.Base;
 using MC.Code.CLI.Help;
-using MC.Code.CLI.FormaterHelp.Base;
+using MC.Code.CLI.RES;
+using System.Resources;
+using System.Text;
 
 namespace MC.Code.CLI.FormaterHelp
 {
     public sealed class ApplicationHelpDetailedFormatter
         : ApplicationHelpFormatterBase
     {
+        private static readonly LocalizedResource _messages
+        = new LocalizedResource(new ResourceManager
+            ("MC.Code.CLI.FormaterHelp.Resources.ApplicationHelpFormatter.pl",
+            typeof(ApplicationHelpDetailedFormatter).Assembly));
 
         public ApplicationHelpDetailedFormatter(
        ApplicationHelp format = null)
@@ -22,8 +28,7 @@ namespace MC.Code.CLI.FormaterHelp
             var output =
                 new StringBuilder();
 
-            output.AppendLine(
-                "Available commands:");
+            output.AppendLine(_messages.Get("Properties"));
 
             output.AppendLine();
 
@@ -36,16 +41,16 @@ namespace MC.Code.CLI.FormaterHelp
                 }
 
                 output.AppendLine(
-                    $"Command : {item.Command}");
+                    $"{_messages.Get("Command")} : {item.Command}");
 
                 output.AppendLine(
-                    $"Description : {item.Description}");
+                    $"{_messages.Get("Description")} : {item.Description}");
 
                 if (item.Properties != null &&
                     item.Properties.Count > 0)
                 {
                     output.AppendLine(
-                        "Properties:");
+                        $"{_messages.Get("Properties")}:");
 
                     foreach (var property in item.Properties)
                     {

@@ -2,6 +2,7 @@
 using MC.Code.CLI;
 using MC.Code.CLI.Presentation;
 using System;
+using System.Globalization;
 
 namespace Test
 {
@@ -10,6 +11,7 @@ namespace Test
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(CultureInfo.CurrentUICulture.Name);
             var output = new ConsoleApplicationInfoOutput();
             CLIApp.Init(
                 "My application",

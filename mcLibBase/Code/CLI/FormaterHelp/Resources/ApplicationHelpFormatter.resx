@@ -117,34 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ArgumentCannotBeEmpty" xml:space="preserve">
-    <value>Argument nie może być pusty.</value>
+  <data name="Commands" xml:space="preserve">
+    <value>Commands</value>
+    <comment>Commands</comment>
   </data>
-  <data name="CommandPrefixContainsWhitespace" xml:space="preserve">
-    <value>Prefiks komendy nie może zawierać znaków białych.</value>
+  <data name="AvailableCommands" xml:space="preserve">
+    <value>Available commands:</value>
+    <comment>Available commands:</comment>
   </data>
-  <data name="CommandPrefixEmpty" xml:space="preserve">
-    <value>Prefiks komendy nie może być pusty.</value>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+    <comment>Description</comment>
   </data>
-  <data name="FirstArgumentMustBeCommand" xml:space="preserve">
-    <value>Pierwszy argument musi być komendą rozpoczynającą się od „{0}”.</value>
-  </data>
-  <data name="InvalidCommand" xml:space="preserve">
-    <value>Nieprawidłowa komenda: „{0}”.</value>
-  </data>
-  <data name="InvalidOption" xml:space="preserve">
-    <value>Nieprawidłowa opcja: „{0}”.</value>
-  </data>
-  <data name="InvalidOptionName" xml:space="preserve">
-    <value>Nieprawidłowa nazwa opcji: „{0}”.</value>
-  </data>
-  <data name="OptionPrefixContainsWhitespace" xml:space="preserve">
-    <value>Prefiks opcji nie może zawierać znaków białych.</value>
-  </data>
-  <data name="OptionPrefixEmpty" xml:space="preserve">
-    <value>Prefiks opcji nie może być pusty.</value>
-  </data>
-  <data name="ParserAlreadyInitialized" xml:space="preserve">
-    <value>CommandLineParser został już zainicjalizowany.</value>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+    <comment>Properties</comment>
   </data>
 </root>

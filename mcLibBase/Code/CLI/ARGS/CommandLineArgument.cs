@@ -1,9 +1,16 @@
-﻿using System;
+﻿using MC.Code.CLI.RES;
+using System;
+using System.Resources;
 
 namespace MC.Code.CLI.ARGS
 {
     public sealed class CommandLineArgument
     {
+        private static readonly LocalizedResource _messages
+            = new LocalizedResource(new ResourceManager
+                ("MC.Code.CLI.ARGS.Resources.CommandLineParser",
+                typeof(CommandLineArgument).Assembly));
+
         public int Position { get; }
 
         public int ArgumentIndex { get; }
@@ -36,10 +43,10 @@ namespace MC.Code.CLI.ARGS
             int position,
             int argumentIndex,
             string value)
-        {
+        {          
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException(
-                    "Argument nie może być pusty.",
+                throw new ArgumentException(_messages.Get(
+                                    "ArgumentCannotBeEmpty"),
                     nameof(value));
 
             if (position <= 0)
@@ -65,9 +72,10 @@ namespace MC.Code.CLI.ARGS
             string name,
             string value)
         {
+
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException(
-                    "Nazwa opcji nie może być pusta.",
+                throw new ArgumentException(_messages.Get(
+                                    "OptionNameCannotBeEmpty"),
                     nameof(name));
 
             if (position <= 0)
