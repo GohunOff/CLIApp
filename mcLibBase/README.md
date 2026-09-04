@@ -614,8 +614,8 @@ See LICENSE.txt for the complete license text.
 
 Copyright (c) 2026 gohunoff@gmail.com
 
-Author
-Przemysław Załuska
+Author: Przemysław Załuska
+Email: gohunoff@gmail.com
 
 GitHub: https://github.com/GohunOff/CLIApp
 

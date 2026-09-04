@@ -7,6 +7,7 @@
     <authors>Przemysław Załuska</authors>
 	<owners>gohunoff@gmail.com</owners>
 	<projectUrl>https://github.com/GohunOff/CLIApp</projectUrl>
+	<repository type="git" url="https://github.com/GohunOff/CLIApp" />
 	  <description>
 		  A lightweight and extensible command-line interface (CLI) framework for .NET applications.
 		  Define commands, parameters, options, and help messages using simple C# attributes.
@@ -27,9 +28,8 @@
 	  
   </metadata>
 	<files>
-		<file src="bin\Release\mcCLIApp.dll"
-			  target="lib\net48" />
-		<file src="bin\Release\mcCLIApp.xml" />
+		<file src="bin\Release\mcCLIApp.dll" target="lib\net48" />
+		<file src="bin\Release\mcCLIApp.xml" target="lib\net48"/>
 		<file src="README.md" target="" />
 		<file src="LICENSE.txt" target="" />
 	</files>
