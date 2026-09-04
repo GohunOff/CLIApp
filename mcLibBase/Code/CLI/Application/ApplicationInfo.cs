@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MC.Code.CLI.RES;
+using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -22,6 +24,10 @@ namespace MC.Code.CLI.Application
     /// </summary>
     public sealed class ApplicationInfo
     {
+        private static readonly LocalizedResource _messages
+                = new LocalizedResource(new ResourceManager
+        ("MC.Code.CLI.Application.Resources.ApplicationInfo",
+        typeof(ApplicationInfo).Assembly));
         // Build information
         /// <summary> 
         /// Gets the application name.
@@ -79,20 +85,20 @@ namespace MC.Code.CLI.Application
             Assembly assembly =
                 Assembly.GetEntryAssembly();
 
-            Name = assembly?.GetName().Name ?? "Aplikacja";
+            Name = assembly?.GetName().Name ?? _messages.Get("UnknownApplication");
 
             Version = assembly?
                 .GetCustomAttribute
                 <AssemblyInformationalVersionAttribute>()?
                 .InformationalVersion
                 ?? assembly?.GetName().Version?.ToString()
-                ?? "brak wersji";
-
+                ?? _messages.Get("UnknownVersion");
+            
             Framework = assembly?
                 .GetCustomAttribute
                 <TargetFrameworkAttribute>()?
                 .FrameworkName
-                ?? "nieznany";
+                ?? _messages.Get("UnknownFramework");
 
             RuntimeVersion =
                 RuntimeInformation.FrameworkDescription;

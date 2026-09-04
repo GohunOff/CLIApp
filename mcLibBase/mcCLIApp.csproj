@@ -55,6 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\CLI\ApplicationCommandParameter.cs" />
+    <Compile Include="Code\CLI\Application\Resources\ApplicationInfo.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApplicationInfo.resx</DependentUpon>
+    </Compile>
     <Compile Include="Code\CLI\ARGS\CommandLineArgument.cs" />
     <Compile Include="Code\CLI\ARGS\CommandLineParser.cs" />
     <Compile Include="Code\CLI\ARGS\ParsedCommand.cs" />
@@ -105,11 +110,17 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Code\CLI\Application\Resources\ApplicationInfo.pl.resx" />
+    <EmbeddedResource Include="Code\CLI\Application\Resources\ApplicationInfo.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationInfo.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.pl.resx" />
     <EmbeddedResource Include="Code\CLI\ARGS\Resources\CommandLineParser.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CommandLineParser.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
