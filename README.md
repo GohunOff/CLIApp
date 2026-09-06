@@ -100,7 +100,37 @@ The command name and description are defined directly in the `ApplicationCommand
 
 ---
 
+## Application Initialization
+
+MC.Code.CLI is initialized through CLIApp.Init().
+
+A basic application can be configured as follows:
+
+```csharp
+static void Main(string[] args)
+{
+    MC.Code.CLI.CLIApp.Init(
+        "program tetowy",
+        new MC.Code.CLI.Presentation.ConsoleApplicationInfoOutput(),
+        MC.Code.CLI.CLIApp.NoArgsBehavior.ShowHelp,
+        args);
+
+    MC.Code.CLI.CLIApp.Run();
+}
+```
+
+The arguments supplied to CLIApp.Init() define:
+
+Application description
+Application information and help presentation
+Behavior when no command-line arguments are supplied
+Original command-line arguments
+CLIApp.Run() starts command discovery, argument processing, and command invocation.
+
+---
+
 ## Commands
+
 
 Commands are defined using the `ApplicationCommand` attribute.
 
@@ -329,6 +359,31 @@ verbose = true
 
 ---
 
+## Option Syntax
+MC.Code.CLI presents command names using the -- prefix:
+
+```text
+--start
+--version
+--config
+```
+
+Named options are presented using the / prefix:
+
+```text
+/verbose
+/fast
+/slow
+```
+
+For example:
+
+```text
+MyApplication.exe --start automatic /fast /verbose
+```
+
+---
+
 ## Multiple Options for One Parameter
 
 MC.Code.CLI allows multiple `ApplicationOption` attributes to be associated with the same method parameter.
@@ -423,6 +478,56 @@ the value becomes:
 ```text
 verbose = true
 ```
+
+---
+
+## Generated Application Information and Help Output
+MC.Code.CLI provides standard console formatting for both application information and available commands.
+
+When ConsoleApplicationInfoOutput is used, the application can display information about the current application and its execution environment followed by the list of available commands.
+
+For example:
+
+```csharp
+static void Main(string[] args)
+{
+    MC.Code.CLI.CLIApp.Init(
+        "program tetowy",
+        new MC.Code.CLI.Presentation.ConsoleApplicationInfoOutput(),
+        MC.Code.CLI.CLIApp.NoArgsBehavior.ShowHelp,
+        args);
+
+    MC.Code.CLI.CLIApp.Run();
+}
+```
+
+The generated output can look similar to:
+
+```text
+**********************************************************
+    testApi -> program tetowy
+----------------------------------------------------------
+    App version        : 1.0.0.0
+    Framework          : .NETFramework,Version=v4.8
+    Runtime .NET       : .NET Framework 4.8.9345.0
+    System             : Microsoft Windows 10.0.26200
+    Architecture       : X86
+    Launched           : 2026-09-06 13:32:54
+    Catalog            : D:\WORK_PZ\_C_SHARP\__MC__\Test\testApi\testApi\bin\Debug\
+----------------------------------------------------------
+**********************************************************
+Available commands:
+----------------------------------------------------------
+    --config                    -> Configures the application
+    --start                     -> Starts the application
+      /slow                           +> Run the application in slow mode
+      /fast                           +> Run the application in fast mode
+      /verbose                        +> Enable verbose output
+            %1 additionalParameter            Additional parameter
+    --version                   -> Displays the application version
+```
+
+The exact values of version, runtime, operating system, architecture, launch time, and application location depend on the environment in which the application is executed.
 
 ---
 
@@ -723,7 +828,7 @@ Command method invocation
 For example:
 
 ```text
-MyApplication.exe start automatic custom --fast --verbose
+MyApplication.exe --start automatic custom /fast /verbose
 ```
 
 is mapped to a method such as:
@@ -737,6 +842,8 @@ public void Start(
 ```
 
 The framework is responsible for interpreting the command-line arguments and invoking the appropriate method.
+
+The presentation layer can then use the discovered metadata to generate application information and help output.
 
 ---
 
