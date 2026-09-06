@@ -12,10 +12,6 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <PackageId>mcCLIApp</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
-    <Authors>TwojeImie</Authors>
-    <Description>Biblioteka do tworzenia aplikacji CLI.</Description>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
