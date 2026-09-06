@@ -2,7 +2,7 @@
 <package>
   <metadata>
 	<title>MC.Code.CLI</title>
-    <id>CLIApp</id>
+    <id>mcCLIApp</id>
     <version>1.0.0.2</version>
     <authors>Przemysław Załuska</authors>
 	<owners>gohunoff@gmail.com</owners>
