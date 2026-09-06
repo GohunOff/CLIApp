@@ -28,7 +28,13 @@ jobs:
         run: msbuild CLIApp.csproj /p:Configuration=Release
 
       - name: Create NuGet package
-        run: nuget pack CLIApp.nuspec -OutputDirectory packages
+        run: nuget pack mcCLIApp.nuspec -OutputDirectory packages
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: gohunoff
 
       - name: Publish to NuGet
-        run: nuget push "packages\*.nupkg" -Source https://api.nuget.org/v3/index.json
+        run: nuget push "packages\*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
