@@ -1,5 +1,3 @@
 <Solution>
   <Project Path="mcLibBase/mcCLIApp.csproj" Id="19504681-ed0c-43b5-8a60-ae4d625742c5" />
-  <Project Path="Test/Test.csproj" Id="b9efa140-2527-44b0-9b0d-56d165926e5f" />
-  <Project Path="Test2/Test2.csproj" Id="95007910-7fd5-425a-9339-6802528e2762" />
 </Solution>
