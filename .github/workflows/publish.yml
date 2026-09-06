@@ -21,14 +21,14 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Restore NuGet packages
+      - name: Restore
         run: nuget restore CLIApp.csproj
 
       - name: Build
         run: msbuild CLIApp.csproj /p:Configuration=Release
 
       - name: Create NuGet package
-        run: nuget pack mcCLIApp.nuspec -OutputDirectory packages
+        run: nuget pack CLIApp.nuspec -OutputDirectory packages
 
       - name: Publish to NuGet
         run: nuget push "packages\*.nupkg" -Source https://api.nuget.org/v3/index.json
