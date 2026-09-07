@@ -71,11 +71,13 @@
     <Compile Include="Code\CLI\Command\ApplicationCommandRunner.cs" />
     <Compile Include="Code\CLI\Command\ApplicationOptionAttribute.cs" />
     <Compile Include="Code\CLI\Command\ApplicationParameterAttribute.cs" />
+    <Compile Include="Code\CLI\Command\DefaultCommandAttribute.cs" />
     <Compile Include="Code\CLI\Command\Resources\ApplicationCommandRunner.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ApplicationCommandRunner.resx</DependentUpon>
     </Compile>
+    <Compile Include="Code\CLI\Command\DefaultCommand.cs" />
     <Compile Include="Code\CLI\FormaterHelp\ApplicationHelpCompactFormatter.cs" />
     <Compile Include="Code\CLI\FormaterHelp\ApplicationHelpDetailedFormatter.cs" />
     <Compile Include="Code\CLI\FormaterHelp\Base\ApplicationHelpFormatterBase.cs" />

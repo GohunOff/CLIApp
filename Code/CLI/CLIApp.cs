@@ -61,25 +61,31 @@ namespace MC.Code.CLI
                         StringComparison.OrdinalIgnoreCase));
         }
 
-        public static bool TryShowHelp()
+        private static void ShowHelp()
+        {
+            _output.ShowInfo(_info);
+            _output.ShowHelp(_help);
+        }
+
+        private static bool TryShowHelp()
         {
             if (!ShowHelpCondition())
                 return false;
 
-            _output.ShowInfo(_info);
-            _output.ShowHelp(_help);
+            ShowHelp();
 
             return true;
         }
 
         public static void Run()
         {
+            if (TryShowHelp()) return;
+
             var runner = new ApplicationCommandRunner();
             if (!runner.Execute(_parsedCommand) &&
                     _noArgsBehavior == NoArgsBehavior.ShowHelp)
             {
-                _output.ShowInfo(_info);
-                _output.ShowHelp(_help);
+                ShowHelp();
             }
         }
     }
