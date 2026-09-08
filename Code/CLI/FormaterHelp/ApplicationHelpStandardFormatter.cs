@@ -41,7 +41,7 @@ namespace MC.Code.CLI.FormaterHelp
 
             foreach (var item in help.Items)
             {
-                if (item.Type !=
+                if (item?.Type !=
                     ApplicationHelpItemType.Command)
                 {
                     continue;

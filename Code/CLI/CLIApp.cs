@@ -13,7 +13,13 @@ namespace MC.Code.CLI
     {
         public enum NoArgsBehavior
         {
+            /// <summary>
+            /// Run -> DefaultCommandAttribute
+            /// </summary>
             Run,
+            /// <summary>
+            /// Show helper
+            /// </summary>
             ShowHelp
         }
 
@@ -22,6 +28,17 @@ namespace MC.Code.CLI
 
         private static IApplicationInfoOutput _output;
         private static ParsedCommand _parsedCommand;
+
+        private static DefaultCommand _defaultComman = null;
+
+        internal static void SetDefaultCommand(DefaultCommand defaultCommand)
+        {
+            if (_defaultComman == null)
+                _defaultComman = defaultCommand;
+            else
+                throw new InvalidOperationException(
+                    "Only one DefaultCommand can be defined.");
+        }
 
         public static ParsedCommand ParsedCommand => _parsedCommand;
 
@@ -39,8 +56,16 @@ namespace MC.Code.CLI
             _info = new ApplicationInfo(description);
             _help = new ApplicationHelp();
 
-            _parsedCommand = CommandLineParser.Parse(
-                inArgs ?? Array.Empty<string>());
+            try
+            {
+                _parsedCommand = CommandLineParser.Parse(
+                    inArgs ?? Array.Empty<string>());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ShowHelp();
+            }
         }
 
         private static bool ShowHelpCondition()
@@ -79,13 +104,18 @@ namespace MC.Code.CLI
 
         public static void Run()
         {
+            if (_parsedCommand == null) return;
             if (TryShowHelp()) return;
 
             var runner = new ApplicationCommandRunner();
-            if (!runner.Execute(_parsedCommand) &&
-                    _noArgsBehavior == NoArgsBehavior.ShowHelp)
+            if (!runner.Execute(_parsedCommand))
             {
-                ShowHelp();
+                if (_parsedCommand.Count>0)
+                    ShowHelp();
+                else
+                {
+                    _defaultComman?.Method.Invoke(_defaultComman?.Instance,null);
+                }
             }
         }
     }

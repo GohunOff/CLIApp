@@ -42,7 +42,7 @@ namespace MC.Code.CLI.Base
                 .Where(IsCommandType)
                 .SelectMany(GetCommandMethods)
                 .Select(CreateCommand)
-                .OrderBy(command => command.Command);
+                .OrderBy(command => command?.Command);
         }
         private static bool IsCommandType(Type type)
         {
@@ -72,12 +72,26 @@ namespace MC.Code.CLI.Base
         {
             return method.IsDefined(
                 typeof(ApplicationCommandAttribute),
-                inherit: false);
+                inherit: false)
+              || method.IsDefined(
+               typeof(DefaultCommandAttribute),
+               inherit: false); ;
         }
 
         private static ApplicationCommand CreateCommand(
       MethodInfo method)
         {
+            var defaulAttribute=
+                 method.GetCustomAttribute<DefaultCommandAttribute>();
+
+            if (defaulAttribute!=null)
+            {
+                var instance = Activator.CreateInstance(method.DeclaringType);
+
+                CLI.CLIApp.SetDefaultCommand(new DefaultCommand(method, (CliCommand)instance));
+                return default;
+            }
+
             var attribute =
                 method.GetCustomAttribute<ApplicationCommandAttribute>();
 
@@ -162,13 +176,14 @@ namespace MC.Code.CLI.Base
 
             return GetCommands(assembly)
                 .Select(command =>
+                    command != null ?
                     CliCommandDefinition.CommandItem(
                         command.Command,
                         command.Description,
                         command.Parameters,
                         command.Options,
                         command.Method,
-                        command.IsHelp))
+                        command.IsHelp) : null)
                 .ToList();
         }
 
