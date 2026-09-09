@@ -35,13 +35,14 @@ namespace MC.Code.CLI.Base
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));
 
-
+            
 
             return assembly
                 .GetTypes()
                 .Where(IsCommandType)
                 .SelectMany(GetCommandMethods)
                 .Select(CreateCommand)
+                .Where(command => command != null)
                 .OrderBy(command => command?.Command);
         }
         private static bool IsCommandType(Type type)

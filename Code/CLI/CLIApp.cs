@@ -110,11 +110,11 @@ namespace MC.Code.CLI
             var runner = new ApplicationCommandRunner();
             if (!runner.Execute(_parsedCommand))
             {
-                if (_parsedCommand.Count>0)
+                if (!String.IsNullOrEmpty(_parsedCommand.Name))
                     ShowHelp();
                 else
                 {
-                    _defaultComman?.Method.Invoke(_defaultComman?.Instance,null);
+                        _defaultComman?.Method.Invoke(_defaultComman?.Instance,null);
                 }
             }
         }
