@@ -6,9 +6,6 @@ namespace MC.Code.CLI.Help
 {
     public sealed class CliCommandDefinition
     {
-        //TODO : wykorzystac domyslny comendę - uruchomienie bez parametru
-        public DefaultCommand DefaultCommand { get; }
-
         public ApplicationHelpItemType Type { get; }
 
         public string Command { get; }
