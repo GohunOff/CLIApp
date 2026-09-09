@@ -79,7 +79,7 @@ namespace MC.Code.CLI
         private static bool IsHelpCommand(string commandName)
         {
             return CliCommand
-                .LoadCliCommands()
+                .LoadCliCommands
                 .Any(x => x.IsHelp && 
                 x.Command.Equals(
                         commandName,

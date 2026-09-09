@@ -27,7 +27,7 @@ namespace MC.Code.CLI.Command
                 return false;
 
             var command = CliCommand
-                .LoadCliCommands()
+                .LoadCliCommands
                 .FirstOrDefault(x =>
                     x.Command.Equals(
                         args.Name,

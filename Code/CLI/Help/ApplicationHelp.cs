@@ -23,7 +23,7 @@ namespace MC.Code.CLI.Help
 
         private void Load()
         {
-            _items.AddRange(Base.CliCommand.LoadCliCommands());
+            _items.AddRange(Base.CliCommand.LoadCliCommands);
         }
     }
 }

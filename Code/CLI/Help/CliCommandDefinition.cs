@@ -7,18 +7,13 @@ namespace MC.Code.CLI.Help
     public sealed class CliCommandDefinition
     {
         public ApplicationHelpItemType Type { get; }
-
         public string Command { get; }
-
         public string Description { get; }
-
         public IReadOnlyList<ApplicationParameterAttribute> Properties { get; }
-
         public IReadOnlyList<ApplicationOptionAttribute> Options { get; }
+        public bool IsHelp { get; }
 
         internal MethodInfo Method { get; }
-
-        public bool IsHelp { get; }
 
         private CliCommandDefinition(
             ApplicationHelpItemType type,
@@ -55,7 +50,6 @@ namespace MC.Code.CLI.Help
                 method,
                 isHelp);
         }
-
         public static CliCommandDefinition Header(
             string description)
         {
@@ -63,7 +57,6 @@ namespace MC.Code.CLI.Help
                 ApplicationHelpItemType.Header,
                 description: description);
         }
-
         public static CliCommandDefinition Separator()
         {
             return new CliCommandDefinition(
@@ -75,7 +68,6 @@ namespace MC.Code.CLI.Help
             return new CliCommandDefinition(
                 ApplicationHelpItemType.EmptyLine);
         }
-
         public override string ToString()
         {
             return $"`{Command}` -> `{Description}` -> options ({Options?.Count}) prop ({Properties?.Count})";
