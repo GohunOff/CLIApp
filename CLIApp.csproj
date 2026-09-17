@@ -66,6 +66,7 @@
       <DependentUpon>CommandLineParser.resx</DependentUpon>
     </Compile>
     <Compile Include="Code\CLI\Base\CliCommand.cs" />
+    <Compile Include="Code\CLI\Base\CliCommandContext.cs" />
     <Compile Include="Code\CLI\Command\ApplicationCommand.cs" />
     <Compile Include="Code\CLI\Command\ApplicationCommandAttribute .cs" />
     <Compile Include="Code\CLI\Command\ApplicationCommandRunner.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Code\CLI\Formatter\DetailedApplicationInfoFormatter.cs" />
     <Compile Include="Code\CLI\Formatter\Base\IApplicationInfoFormatter.cs" />
     <Compile Include="Code\CLI\Formatter\StandardApplicationInfoFormatter.cs" />
+    <Compile Include="Code\CLI\Help\CommandDiscoveryResult.cs" />
     <Compile Include="Code\CLI\Presentation\ConsoleApplicationInfoOutput .cs" />
     <Compile Include="Code\CLI\Help\ApplicationHelp.cs" />
     <Compile Include="Code\CLI\Help\ApplicationHelpFormat.cs" />

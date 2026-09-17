@@ -6,6 +6,7 @@ using MC.Code.CLI.Help;
 using MC.Code.CLI.Presentation;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace MC.Code.CLI
 {
@@ -29,16 +30,8 @@ namespace MC.Code.CLI
         private static IApplicationInfoOutput _output;
         private static ParsedCommand _parsedCommand;
 
-        private static DefaultCommand _defaultComman = null;
-
-        internal static void SetDefaultCommand(DefaultCommand defaultCommand)
-        {
-            if (_defaultComman == null)
-                _defaultComman = defaultCommand;
-            else
-                throw new InvalidOperationException(
-                    "Only one DefaultCommand can be defined.");
-        }
+        private static DefaultCommand _defaultCommand;
+        private static CommandDiscoveryResult _commandDiscovery;
 
         public static ParsedCommand ParsedCommand => _parsedCommand;
 
@@ -55,6 +48,13 @@ namespace MC.Code.CLI
             _noArgsBehavior = noArgsBehavior;
             _info = new ApplicationInfo(description);
             _help = new ApplicationHelp();
+
+            _commandDiscovery =
+                CliCommand.DiscoverCommands(
+                    Assembly.GetEntryAssembly());
+
+            _defaultCommand =
+                _commandDiscovery.DefaultCommand;
 
             try
             {
@@ -114,7 +114,10 @@ namespace MC.Code.CLI
                     ShowHelp();
                 else
                 {
-                        _defaultComman?.Method.Invoke(_defaultComman?.Instance,null);
+                    if (_defaultCommand == null)
+                        throw new InvalidOperationException(
+                            "No DefaultCommand defined. Please define a DefaultCommand or provide a command to execute.");
+                    _defaultCommand?.Method.Invoke(_defaultCommand?.Instance,null);
                 }
             }
         }

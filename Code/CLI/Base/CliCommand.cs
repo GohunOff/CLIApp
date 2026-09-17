@@ -28,28 +28,46 @@ namespace MC.Code.CLI.Base
                     $"does not inherit from CliCommand.");
             }
         }
-        private static readonly Lazy<IReadOnlyList<CliCommandDefinition>> _commands =
-            new Lazy<IReadOnlyList<CliCommandDefinition>>(LoadCliCommandsInternal);
-        private static IReadOnlyList<CliCommandDefinition>
-            LoadCliCommandsInternal()
+        private static readonly Lazy<CommandDiscoveryResult> _commands =
+            new Lazy<CommandDiscoveryResult>(LoadCliCommandsInternal);
+        private static CommandDiscoveryResult LoadCliCommandsInternal()
         {
             var assembly = Assembly.GetEntryAssembly();
 
             if (assembly == null)
-                return Array.Empty<CliCommandDefinition>();
+            {
+                return new CommandDiscoveryResult(
+                    Array.Empty<CliCommandDefinition>(),
+                    null);
+            }
 
-            return GetCommands(assembly)
-                .Select(command =>
-                    command != null ?
-                    CliCommandDefinition.CommandItem(
-                        command.Command,
-                        command.Description,
-                        command.Parameters,
-                        command.Options,
-                        command.Method,
-                        command.IsHelp) : null)
-                .ToList();
+            return DiscoverCommands(assembly);
         }
+        private static CliCommandDefinition CreateCommandDefinition(
+     MethodInfo method)
+        {
+            var attribute =
+                method.GetCustomAttribute<ApplicationCommandAttribute>();
+
+            if (attribute == null)
+            {
+                throw new InvalidOperationException(
+                    $"Method '{method.DeclaringType?.FullName}.{method.Name}' " +
+                    $"does not have the ApplicationCommandAttribute.");
+            }
+
+            var parameters = GetParameters(method);
+            var options = GetOptions(method);
+
+            return CliCommandDefinition.CommandItem(
+                attribute.Command,
+                attribute.Description,
+                parameters,
+                options,
+                method,
+                attribute.IsHelp);
+        }
+
         private static bool IsCommandType(Type type)
         {
             return typeof(CliCommand).IsAssignableFrom(type)
@@ -100,42 +118,6 @@ namespace MC.Code.CLI.Base
                typeof(DefaultCommandAttribute),
                inherit: false); ;
         }
-        private static ApplicationCommand CreateCommand(
-            MethodInfo method)
-        {
-            var defaulAttribute =
-                 method.GetCustomAttribute<DefaultCommandAttribute>();
-
-            if (defaulAttribute != null)
-            {
-                var instance = Activator.CreateInstance(method.DeclaringType);
-
-                CLI.CLIApp.SetDefaultCommand(new DefaultCommand(method, (CliCommand)instance));
-                return default;
-            }
-
-            var attribute =
-                method.GetCustomAttribute<ApplicationCommandAttribute>();
-
-            if (attribute == null)
-            {
-                throw new InvalidOperationException(
-                    $"Method '{method.DeclaringType?.FullName}.{method.Name}' " +
-                    $"does not have the ApplicationCommandAttribute.");
-            }
-
-            var parameters = GetParameters(method);
-            var options = GetOptions(method);
-
-            return new ApplicationCommand(
-                attribute.Command,
-                attribute.ShortCommand,
-                attribute.Description,
-                method,
-                parameters,
-                options,
-                attribute.IsHelp);
-        }
         private static List<ApplicationParameterAttribute> GetParameters(
             MethodInfo method)
         {
@@ -178,8 +160,9 @@ namespace MC.Code.CLI.Base
         }
 
         public static IReadOnlyList<CliCommandDefinition> LoadCliCommands
-            => _commands.Value;
-        public static IOrderedEnumerable<ApplicationCommand> GetCommands(
+            => _commands.Value.Commands;
+
+        public static CommandDiscoveryResult DiscoverCommands(
             Assembly assembly)
         {
             if (assembly == null)
@@ -193,7 +176,8 @@ namespace MC.Code.CLI.Base
             if (commandTypes.Count == 0)
             {
                 throw new InvalidOperationException(
-                    $"No concrete class inheriting from {nameof(CliCommand)} was found.");
+                    $"No concrete class inheriting from " +
+                    $"{nameof(CliCommand)} was found.");
             }
 
             if (commandTypes.Count > 1)
@@ -203,27 +187,62 @@ namespace MC.Code.CLI.Base
                     commandTypes.Select(x => x.FullName));
 
                 throw new InvalidOperationException(
-                    $"Only one class can inherit from {nameof(CliCommand)}. " +
+                    $"Only one class can inherit from " +
+                    $"{nameof(CliCommand)}. " +
                     $"Found {commandTypes.Count}: {types}.");
             }
 
             var commandType = commandTypes[0];
 
-            var commandMethods = GetCommandMethods(commandType).ToList();
+            var commandMethods =
+                GetCommandMethods(commandType).ToList();
 
             if (commandMethods.Count == 0)
             {
                 throw new InvalidOperationException(
-                    $"Class '{commandType.FullName}' must contain at least one " +
-                    $"{nameof(ApplicationCommandAttribute)} or " +
+                    $"Class '{commandType.FullName}' must contain at least " +
+                    $"one {nameof(ApplicationCommandAttribute)} or " +
                     $"{nameof(DefaultCommandAttribute)}.");
             }
 
-            return commandMethods
-                .Select(CreateCommand)
-                .Where(command => command != null)
-                .OrderBy(command => command.Command);
-        }      
+            var commands =
+                new List<CliCommandDefinition>();
+
+            DefaultCommand defaultCommand = null;
+
+            foreach (var method in commandMethods)
+            {
+                if (method.IsDefined(
+                    typeof(DefaultCommandAttribute),
+                    inherit: false))
+                {
+                    if (defaultCommand != null)
+                    {
+                        throw new InvalidOperationException(
+                            "Only one DefaultCommand can be defined.");
+                    }
+
+                    var instance =
+                        Activator.CreateInstance(commandType);
+
+                    defaultCommand = new DefaultCommand(
+                        method,
+                        (CliCommand)instance);
+
+                    continue;
+                }
+
+                commands.Add(
+                    CreateCommandDefinition(method));
+            }
+
+            return new CommandDiscoveryResult(
+                commands
+                    .OrderBy(x => x.Command)
+                    .ToList(),
+                defaultCommand);
+        }
+        
         public static CliCommandDefinition GetCliCommand(
             MethodBase method)
         {
@@ -233,6 +252,27 @@ namespace MC.Code.CLI.Base
             return LoadCliCommands
                 .FirstOrDefault(x => x.Method == method);
         }
+
+        //private CliCommandContext _context;
+
+        //public CliCommandContext Context
+        //{
+        //    get
+        //    {
+        //        return _context
+        //            ?? throw new InvalidOperationException(
+        //                "Command context is not available. " +
+        //                "The command must be executed by the CLI framework.");
+        //    }
+
+        //    internal set
+        //    {
+        //        _context = value;
+        //    }
+        //}
+
+        //public CliCommandDefinition CurrentCommand
+        //    => Context.Command;
         public CliCommandDefinition CurrentCommand
         {
             get
