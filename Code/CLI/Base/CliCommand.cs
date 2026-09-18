@@ -216,6 +216,12 @@ namespace MC.Code.CLI.Base
                     typeof(DefaultCommandAttribute),
                     inherit: false))
                 {
+                    if (method.GetParameters().Length > 0)
+                    {
+                        throw new InvalidOperationException(
+                            $"DefaultCommand '{method.Name}' cannot have parameters.");
+                    }
+
                     if (defaultCommand != null)
                     {
                         throw new InvalidOperationException(

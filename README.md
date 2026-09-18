@@ -802,6 +802,204 @@ This keeps the command-line definition close to the application code.
 
 ---
 
+## Default Command
+MC.Code.CLI allows an application to define a default command using the DefaultCommand attribute.
+
+A method marked with [DefaultCommand] is used as the application's default entry point when no explicit ApplicationCommand is selected.
+
+The default command must not define parameters.
+
+Example:
+```csharp
+[DefaultCommand]
+public void Default()
+{
+    Console.WriteLine("Default command executed.");
+}
+```
+The DefaultCommand attribute identifies the method as the application's default command.
+
+The method should have a parameterless signature:
+```csharp
+[DefaultCommand]
+public void Default()
+{
+}
+```
+Parameters must not be added to a default command:
+```csharp
+// Invalid usage
+[DefaultCommand]
+public void Default(int value)
+{
+}
+```
+DefaultCommand is intended to provide a parameterless fallback command rather than another positional command definition.
+
+## Default Command vs Application Command
+ApplicationCommand defines an explicitly named command:
+```csharp
+[ApplicationCommand(
+    "version",
+    "Displays the application version")]
+public void Version()
+{
+    Console.WriteLine("Version 1.0.0");
+}
+```
+It is invoked by specifying the command name:
+
+MyApplication.exe version
+
+A DefaultCommand does not have a command name:
+```csharp
+[DefaultCommand]
+public void Default()
+{
+    Console.WriteLine("Default command executed.");
+}
+```
+It is used when the application execution is handled by the default command.
+
+This makes DefaultCommand useful for applications that need a parameterless fallback operation in addition to explicitly named commands.
+
+## Default Command and No Arguments
+DefaultCommand should be considered separately from the application's no-argument behavior.
+
+For example:
+```csharp
+CLIApp.Init(
+    "My application",
+    new ConsoleApplicationInfoOutput(),
+    CLIApp.NoArgsBehavior.ShowHelp,
+    args);
+```
+The NoArgsBehavior configuration determines how the application handles execution without command-line arguments.
+
+DefaultCommand defines which command is considered the default command by the command system.
+
+Therefore, DefaultCommand does not itself define or accept command-line parameters.
+
+If a default command is defined, its method remains parameterless:
+```csharp
+[DefaultCommand]
+public void Default()
+{
+    Console.WriteLine("Default command executed.");
+}
+```
+Complete Example
+A command class can contain both explicitly named commands and a default command:
+```csharp
+public class Commands : CliCommand
+{
+    [ApplicationCommand(
+        "help",
+        "Displays application help",
+        isHelp: true)]
+    public void Help()
+    {
+    }
+
+    [ApplicationCommand(
+        "version",
+        "Displays the application version")]
+    public void Version()
+    {
+        Console.WriteLine("Version 1.0.0");
+    }
+
+    [ApplicationCommand(
+        "config",
+        "Configures the application")]
+    public void Config()
+    {
+        Console.WriteLine("Configuration");
+    }
+
+    [ApplicationCommand(
+        "start",
+        "Starts the application")]
+    public void Start(
+        [ApplicationParameter(
+            description: "Application startup mode")]
+        string startupMode,
+
+        [ApplicationParameter(
+            description: "Additional parameter")]
+        string additionalParameter = "default",
+
+        [ApplicationOption(
+            "slow",
+            "Run the application in slow mode")]
+        [ApplicationOption(
+            "fast",
+            "Run the application in fast mode")]
+        ExecutionMode executionMode = ExecutionMode.Slow,
+
+        [ApplicationOption(
+            "verbose",
+            "Enable verbose output")]
+        bool verbose = false)
+    {
+        Console.WriteLine(
+            $"Startup mode: {startupMode}");
+
+        Console.WriteLine(
+            $"Additional parameter: {additionalParameter}");
+
+        Console.WriteLine(
+            $"Execution mode: {executionMode}");
+
+        Console.WriteLine(
+            $"Verbose: {verbose}");
+    }
+
+    [DefaultCommand]
+    public void Default()
+    {
+        Console.WriteLine(
+            "Default command executed.");
+    }
+}
+```
+The command class can therefore contain:
+
+explicitly named commands defined with ApplicationCommand,
+
+a help command identified with isHelp: true,
+
+positional parameters defined with ApplicationParameter,
+
+named options defined with ApplicationOption,
+
+one parameterless default command defined with DefaultCommand.
+
+## DefaultCommand Rules
+The following rules apply to DefaultCommand:
+
+A DefaultCommand method must be parameterless.
+
+DefaultCommand does not accept ApplicationParameter parameters.
+
+DefaultCommand does not accept ApplicationOption parameters.
+
+DefaultCommand does not have a command name.
+
+DefaultCommand is intended to identify the application's default command handler.
+
+An application should define at most one default command.
+
+Example of the intended usage:
+```csharp
+[DefaultCommand]
+public void Default()
+{
+    Console.WriteLine("Default command executed.");
+}
+```
+DefaultCommand therefore differs from ApplicationCommand primarily in its role: ApplicationCommand explicitly defines a named CLI command, while DefaultCommand identifies the parameterless default command handler.
+
 ## How It Works
 
 The general execution flow is:
@@ -846,6 +1044,240 @@ The framework is responsible for interpreting the command-line arguments and inv
 The presentation layer can then use the discovered metadata to generate application information and help output.
 
 ---
+
+## Custom Help Formatters
+MC.Code.CLI separates command definition and command execution from the presentation of help information.
+
+The help data is represented by ApplicationHelp, while the way this information is displayed is controlled by an implementation of IApplicationHelpFormatter.
+
+The ApplicationHelpFormatterBase class provides a convenient base class for creating custom help formatters.
+
+This allows applications to change the appearance and structure of the generated help output without changing the command definitions themselves.
+
+ApplicationHelpFormatterBase
+ApplicationHelpFormatterBase is an abstract class that provides the common functionality required by a help formatter.
+
+A custom formatter can inherit from this class and implement the FormatCore() method:
+```csharp
+using MC.Code.CLI.FormaterHelp.Base;
+using MC.Code.CLI.Help;
+using System.Text;
+
+public sealed class CustomHelpFormatter
+    : ApplicationHelpFormatterBase
+{
+    protected override string FormatCore(
+        ApplicationHelp help)
+    {
+        var output =
+            new StringBuilder();
+
+        foreach (var item in help.Items)
+        {
+            if (item.Type !=
+                ApplicationHelpItemType.Command)
+            {
+                continue;
+            }
+
+            output.AppendLine(
+                $"{item.Command} - {item.Description}");
+        }
+
+        return output.ToString();
+    }
+}
+```
+The formatter can then produce a completely different representation of the same command metadata.
+
+For example:
+```text
+version - Displays the application version
+config  - Configures the application
+start   - Starts the application
+```
+The command definitions do not need to be modified.
+
+Format Method
+ApplicationHelpFormatterBase exposes the public Format() method:
+```csharp
+public string Format(ApplicationHelp help)
+```
+The method validates the supplied ApplicationHelp instance and then delegates the formatting operation to the protected FormatCore() method implemented by the derived formatter.
+
+Conceptually, the process is:
+```text
+ApplicationHelp
+      |
+      v
+Format()
+      |
+      v
+FormatCore()
+      |
+      v
+Formatted help text
+```
+This means that common validation and formatter infrastructure remain in the base class, while the derived class controls the final presentation.
+
+Reusing Common Formatting Functions
+ApplicationHelpFormatterBase also provides protected helper methods that can be reused by custom formatters.
+
+For example, FormatOptions() can be used to format command options:
+```csharp
+protected string FormatOptions(
+    ApplicationOptionAttribute options,
+    string indent,
+    int commandWidth)
+
+and FormatProperty() can be used to format command parameters:
+
+protected string FormatProperty(
+    ApplicationParameterAttribute property,
+    string indent,
+    int commandWidth = 10)
+```
+This makes it possible to customize only the parts of the output that need to be changed while reusing the common formatting logic supplied by MC.Code.CLI.
+
+For example:
+```csharp
+public sealed class CustomHelpFormatter
+    : ApplicationHelpFormatterBase
+{
+    protected override string FormatCore(
+        ApplicationHelp help)
+    {
+        var output =
+            new StringBuilder();
+
+        output.AppendLine("AVAILABLE COMMANDS");
+        output.AppendLine("==================");
+
+        foreach (var item in help.Items)
+        {
+            if (item.Type !=
+                ApplicationHelpItemType.Command)
+            {
+                continue;
+            }
+
+            output.AppendLine(
+                $"{item.Command} - {item.Description}");
+
+            if (item.Properties != null)
+            {
+                foreach (var property in item.Properties)
+                {
+                    output.AppendLine(
+                        FormatProperty(
+                            property,
+                            "    "));
+                }
+            }
+
+            output.AppendLine();
+        }
+
+        return output.ToString();
+    }
+}
+```
+## Customizing the Help Presentation
+A custom formatter can be used whenever the default help presentation is not suitable for an application.
+
+For example, a custom formatter can:
+
+Change the layout of the help output
+
+Change indentation and alignment
+
+Group commands into sections
+
+Display parameters and options differently
+
+Add application-specific information
+
+Create a compact help format
+
+Create a detailed help format
+
+Add custom console formatting
+
+Produce output for another presentation layer
+
+The important point is that the command implementation remains unchanged.
+
+For example, a command can continue to be defined normally:
+```csharp
+[ApplicationCommand(
+    "start",
+    "Starts the application")]
+public void Start(
+    [ApplicationParameter(
+        description: "Application startup mode")]
+    string startupMode,
+
+    [ApplicationOption(
+        "verbose",
+        "Enable verbose output")]
+    bool verbose = false)
+{
+}
+```
+The same command metadata can then be presented using either the standard formatter or a custom formatter.
+
+## Formatter Architecture
+The relationship between command metadata and help formatting can be represented as:
+```text
+Command definitions
+        |
+        v
+ApplicationHelp
+        |
+        v
+IApplicationHelpFormatter
+        |
+        v
+ApplicationHelpFormatterBase
+        |
+        v
+FormatCore()
+        |
+        v
+Formatted help output
+```
+ApplicationHelp contains the information describing the application's commands, parameters, and options.
+
+IApplicationHelpFormatter defines the formatter contract.
+
+ApplicationHelpFormatterBase provides reusable formatter functionality and common helper methods.
+
+A class derived from ApplicationHelpFormatterBase implements FormatCore() and determines how the help information is ultimately presented.
+
+Standard and Custom Formatters
+MC.Code.CLI can therefore support multiple help presentation styles without changing the command implementation.
+
+For example:
+```text
+                    ApplicationHelp
+                           |
+                           v
+                IApplicationHelpFormatter
+                           |
+             +-------------+-------------+
+             |                           |
+             v                           v
+ApplicationHelpDetailedFormatter    CustomHelpFormatter
+             |                           |
+             v                           v
+       Detailed output             Custom output
+```
+
+The standard ApplicationHelpDetailedFormatter provides a predefined presentation of the available commands and their properties.
+
+Applications can create their own formatter whenever a different presentation is required.
+
+This design keeps the command model independent from the way help information is displayed and makes the help system extensible without requiring changes to the core command definitions.
 
 ## Why Use MC.Code.CLI?
 
